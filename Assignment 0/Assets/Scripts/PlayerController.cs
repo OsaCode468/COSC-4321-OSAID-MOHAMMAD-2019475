@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using TMPro;
 public class PlayerController : MonoBehaviour
 {
     // Rigidbody of the player.
     private Rigidbody rb;
+    public TextMeshProUGUI countText;
+    public GameObject winTextObject;
 
+    private int count;
     // Movement along X and Y axes.
     private float movementX;
     private float movementY;
@@ -21,6 +24,9 @@ public class PlayerController : MonoBehaviour
     {
         // Get and store the Rigidbody component attached to the player.
         rb = GetComponent<Rigidbody>();
+        count = 0;
+        SetCountText();
+        winTextObject.SetActive(false);
     }
 
     // This function is called when a move input is detected.
@@ -46,6 +52,18 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        other.gameObject.SetActive(false);
+        if (other.gameObject.CompareTag("PickUp")){
+            other.gameObject.SetActive(false);
+            count = count + 1;
+            SetCountText();
+        }
+        if (count >= 7)
+        {
+            winTextObject.SetActive(true);
+        }
+    }
+    void SetCountText()
+    {
+        countText.text = "Count: " + count.ToString();
     }
 }
